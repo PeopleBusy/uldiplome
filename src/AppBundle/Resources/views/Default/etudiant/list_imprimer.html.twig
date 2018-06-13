@@ -1,0 +1,162 @@
+{% extends "::base.html.twig" %}
+
+
+{% block title %} Demandes {% endblock %}
+
+
+{% block body %}
+
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <h1>
+            <small></small>
+        </h1>
+        <ol class="breadcrumb">
+            <li><a href="#"><i class="fa fa-list"></i> Demandes imprimées</a></li>
+            <li class="active">Liste</li>
+        </ol>
+
+        {% if success is defined  %}
+
+            <div class="row">
+                <div class="col-md-3"></div>
+                <div class="col-md-6">
+                    <div class="box box-success box-solid" style="margin-bottom: 0px;">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Succès</h3>
+
+                            <div class="box-tools pull-right">
+                                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                            </div>
+                            <!-- /.box-tools -->
+                        </div>
+                        <!-- /.box-header -->
+                        <div class="box-body">
+                            {{ success }}
+                        </div>
+                        <!-- /.box-body -->
+                    </div>
+                </div>
+            </div>
+
+        {% endif %}
+
+    </section>
+
+
+    <section class="content">
+
+
+        <div class="box">
+            <div class="box-header with-border">
+                <h3 class="box-title">
+                    <i class="fa fa-list"></i>
+                   {{ libelle }}
+
+                </h3>
+
+                <div class="box-tools pull-right">
+                    <button type="button" class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip" title="Collapse">
+                        <i class="fa fa-minus"></i></button>
+                    <button type="button" class="btn btn-box-tool" data-widget="remove" data-toggle="tooltip" title="Remove">
+                        <i class="fa fa-times"></i></button>
+                </div>
+            </div>
+            <div class="box-body">
+                <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                    <div class="panel panel-default">
+                        <div class="panel-heading" role="tab" id="headingOne" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                            <h4 class="panel-title">
+                                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                    <span class="">
+                                        <i class="fa fa-filter"></i>
+                                        Filtres
+                                    </span>
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+                            <div class="panel-body">
+                                <form>
+                                    <div class="col-md-2">
+                                        <div>
+                                            <label for="annee" class="required">Année:</label>
+                                            <select id="annee" name="annee" required="required" class="form-control">
+                                                <option value="2018">2018</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label>Matricule:</label>
+                                        <input type="text" name="matricule" placeholder="Saisir un matricule" class="form-control pull-right" id="matricule">
+                                    </div>
+                                    <div class="form-group col-md-1">
+                                        <button type="submit" class="btn btn-success marTop25px"><i class="fa fa-filter"></i> Filtrer</button>
+                                    </div>
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {% if demandes is empty  %}
+                    <h3 style="text-align: center;">Aucun enregistrement trouvé</h3>
+                {% else %}
+
+                    <div class="col-md-12 table-responsive marTop25px">
+                        <table id="" class="table table-striped table-bordered table-hover">
+                            <thead>
+                            <tr>
+                                <th class="hide"><input type="checkbox"/></th>
+                                <th>N° Enreg.</th>
+                                <th>Nom</th>
+                                <th>Prénom(s)</th>
+                                <th>Genre</th>
+                                <th>Date Examen</th>
+                                <th>Option</th>
+                                <th>Spécialité</th>
+                                <th>Mention</th>
+                                <th>Type</th>
+                                <th>Etat</th>
+                                <th class="center">Action(s)</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for i in demandes %}
+                                <tr class="">
+                                    <td class="hide"><input type="checkbox"/></td>
+                                    <td><span class="id badge bg-default">{{ i.id }}</span></td>
+                                    <td><span class="nom">{{ i.etudiant.nom }}</span></td>
+                                    <td><span class="prenom">{{ i.etudiant.prenom }}</span></td>
+                                    <td><span class="genre">{{ i.etudiant.genre }}</span></td>
+                                    <td><span class="dateExamen">{{ i.etudiant.dateExamen }}</span></td>
+                                    <td><span class="option">{{ i.etudiant.optionEtud }}</span></td>
+                                    <td><span class="specialite">{{ i.etudiant.specialite }}</span></td>
+                                    <td><span class="mention">{{ i.etudiant.mention }}</span></td>
+                                    <td><span class="mention">{{ i.typeDemande }}</span></td>
+                                    <td><span class="mention">{{ i.etatDemande }}</span></td>
+
+                                    <td class="center">
+                                        <a href="#" class="btn btn-success btn-xs"><i class="fa fa-print"></i> Imprimer</a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+
+                            </tbody>
+                        </table>
+                    </div>
+
+                {% endif %}
+
+
+            </div>
+            <!-- /.box-body -->
+            <div class="box-footer">
+                {#Footer#}
+            </div>
+            <!-- /.box-footer-->
+        </div>
+    </section>
+
+{% endblock %}
