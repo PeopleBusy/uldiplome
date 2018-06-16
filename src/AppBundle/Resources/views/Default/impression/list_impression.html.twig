@@ -1,0 +1,151 @@
+{% extends "::base.html.twig" %}
+
+
+{% block title %} Impressions {% endblock %}
+
+
+{% block body %}
+
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <h1>
+            <small></small>
+        </h1>
+        <ol class="breadcrumb">
+            <li><a href="#"><i class="fa fa-print"></i> Impressions</a></li>
+            <li class="active">Liste</li>
+        </ol>
+
+        {% if success is defined  %}
+
+            <div class="row">
+                <div class="col-md-3"></div>
+                <div class="col-md-6">
+                    <div class="box box-success box-solid" style="margin-bottom: 0px;">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Succès</h3>
+
+                            <div class="box-tools pull-right">
+                                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                            </div>
+                            <!-- /.box-tools -->
+                        </div>
+                        <!-- /.box-header -->
+                        <div class="box-body">
+                            {{ success }}
+                        </div>
+                        <!-- /.box-body -->
+                    </div>
+                </div>
+            </div>
+
+        {% endif %}
+
+    </section>
+
+
+    <section class="content">
+
+
+        <div class="box">
+            <div class="box-header with-border">
+                <h3 class="box-title">
+                    <i class="fa fa-print"></i>
+                   {{ libelle }}
+
+                </h3>
+
+                <div class="box-tools pull-right">
+                    <button type="button" class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip" title="Collapse">
+                        <i class="fa fa-minus"></i></button>
+                    <button type="button" class="btn btn-box-tool" data-widget="remove" data-toggle="tooltip" title="Remove">
+                        <i class="fa fa-times"></i></button>
+                </div>
+            </div>
+            <div class="box-body">
+                <div class="panel-group hide" id="accordion" role="tablist" aria-multiselectable="true">
+                    <div class="panel panel-default">
+                        <div class="panel-heading" role="tab" id="headingOne" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                            <h4 class="panel-title">
+                                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                    <span class="">
+                                        <i class="fa fa-filter"></i>
+                                        Filtres
+                                    </span>
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+                            <div class="panel-body">
+                                <form action="{{ path('liste_demande_filter', {'formId': 2}) }}">
+                                    <div class="col-md-2">
+                                        <label>Matricule:</label>
+                                        <input type="text" name="matricule" required="true" placeholder="Saisir un matricule" class="form-control pull-right" id="matricule">
+                                    </div>
+                                    <div class="form-group col-md-1">
+                                        <button type="submit" class="btn btn-success marTop25px"><i class="fa fa-filter"></i> Filtrer</button>
+                                    </div>
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {% if impressions is empty  %}
+                    <h3 style="text-align: center;">Aucun enregistrement trouvé</h3>
+                {% else %}
+
+                    <div class="col-md-12 table-responsive marTop25px">
+                        <table id="example1" class="table table-striped table-bordered table-hover">
+                            <thead>
+                            <tr>
+                                <th class="hide"><input type="checkbox"/></th>
+                                <th class="hide">N° Enreg.</th>
+                                <th>Etudiant</th>
+                                <th>Date examen</th>
+                                <th>Option</th>
+                                <th>Spécialité</th>
+                                <th>Mention</th>
+                                <th>Type</th>
+                                <th>Enregistré par</th>
+                                <th>Date Enreg.</th>
+                                <th>Imprimé par</th>
+                                <th>Date Impr.</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for i in impressions %}
+                                <tr class="">
+                                    <td class="hide"><input type="checkbox"/></td>
+                                    <td class="hide"><span class="id">{{ i.id }}</span></td>
+                                    <td><span class="nom">{{ i.demande.etudiant.nom }} {{ i.demande.etudiant.prenom }}</span></td>
+                                    <td><span class="datenaiss">{{ i.demande.etudiant.dateExamen }}</span></td>
+                                    <td><span class="option">{{ i.demande.etudiant.optionEtud }}</span></td>
+                                    <td><span class="diplome">{{ i.demande.etudiant.specialite }}</span></td>
+                                    <td><span class="mention">{{ i.demande.etudiant.mention }}</span></td>
+                                    <td><span class="">{{ i.demande.typeDemande }}</span></td>
+                                    <td><span class="">{{ i.demande.enregistrePar }}</span></td>
+                                    <td><span class="">{{ i.demande.dateEnregistrement|date('d/m/Y h:i:s') }}</span></td>
+                                    <td><span class="">{{ i.imprimePar }}</span></td>
+                                    <td><span class="">{{ i.dateImpression|date('d/m/Y h:i:s') }}</span></td>
+                                </tr>
+                            {% endfor %}
+
+                            </tbody>
+                        </table>
+                    </div>
+
+                {% endif %}
+
+
+            </div>
+            <!-- /.box-body -->
+            <div class="box-footer">
+                {#Footer#}
+            </div>
+            <!-- /.box-footer-->
+        </div>
+    </section>
+
+{% endblock %}

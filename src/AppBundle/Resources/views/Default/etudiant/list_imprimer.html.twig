@@ -63,7 +63,7 @@
                 </div>
             </div>
             <div class="box-body">
-                <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                <div class="panel-group hide" id="accordion" role="tablist" aria-multiselectable="true">
                     <div class="panel panel-default">
                         <div class="panel-heading" role="tab" id="headingOne" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
                             <h4 class="panel-title">
@@ -77,18 +77,10 @@
                         </div>
                         <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
                             <div class="panel-body">
-                                <form>
-                                    <div class="col-md-2">
-                                        <div>
-                                            <label for="annee" class="required">Année:</label>
-                                            <select id="annee" name="annee" required="required" class="form-control">
-                                                <option value="2018">2018</option>
-                                            </select>
-                                        </div>
-                                    </div>
+                                <form action="{{ path('liste_demande_filter', {'formId': 3}) }}">
                                     <div class="col-md-2">
                                         <label>Matricule:</label>
-                                        <input type="text" name="matricule" placeholder="Saisir un matricule" class="form-control pull-right" id="matricule">
+                                        <input type="text" name="matricule" required="true" placeholder="Saisir un matricule" class="form-control pull-right" id="matricule">
                                     </div>
                                     <div class="form-group col-md-1">
                                         <button type="submit" class="btn btn-success marTop25px"><i class="fa fa-filter"></i> Filtrer</button>
@@ -105,15 +97,14 @@
                 {% else %}
 
                     <div class="col-md-12 table-responsive marTop25px">
-                        <table id="" class="table table-striped table-bordered table-hover">
+                        <table id="example1" class="table table-striped table-bordered table-hover">
                             <thead>
                             <tr>
                                 <th class="hide"><input type="checkbox"/></th>
-                                <th>N° Enreg.</th>
+                                <th class="hide">N° Enreg.</th>
                                 <th>Nom</th>
                                 <th>Prénom(s)</th>
-                                <th>Genre</th>
-                                <th>Date Examen</th>
+                                <th>Date examen</th>
                                 <th>Option</th>
                                 <th>Spécialité</th>
                                 <th>Mention</th>
@@ -126,18 +117,17 @@
                             {% for i in demandes %}
                                 <tr class="">
                                     <td class="hide"><input type="checkbox"/></td>
-                                    <td><span class="id badge bg-default">{{ i.id }}</span></td>
+                                    <td class="hide"><span class="id">{{ i.id }}</span></td>
                                     <td><span class="nom">{{ i.etudiant.nom }}</span></td>
                                     <td><span class="prenom">{{ i.etudiant.prenom }}</span></td>
-                                    <td><span class="genre">{{ i.etudiant.genre }}</span></td>
-                                    <td><span class="dateExamen">{{ i.etudiant.dateExamen }}</span></td>
-                                    <td><span class="option">{{ i.etudiant.optionEtud }}</span></td>
-                                    <td><span class="specialite">{{ i.etudiant.specialite }}</span></td>
+                                    <td><span class="datenaiss">{{ i.etudiant.dateExamen }}</span></td>
+                                    <td><span class="diplome">{{ i.etudiant.optionEtud }}</span></td>
+                                    <td><span class="option">{{ i.etudiant.specialite }}</span></td>
                                     <td><span class="mention">{{ i.etudiant.mention }}</span></td>
-                                    <td><span class="mention">{{ i.typeDemande }}</span></td>
-                                    <td><span class="mention">{{ i.etatDemande }}</span></td>
+                                    <td><span class="">{{ i.typeDemande }}</span></td>
+                                    <td><span class="">{{ i.etatDemande }}</span></td>
 
-                                    <td class="center">
+                                    <td class="center hide">
                                         <a href="#" class="btn btn-success btn-xs"><i class="fa fa-print"></i> Imprimer</a>
                                     </td>
                                 </tr>

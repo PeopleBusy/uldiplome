@@ -23,4 +23,16 @@ class ImpressionRepository extends \Doctrine\ORM\EntityRepository
         return $query->getSingleScalarResult();
 
     }
+
+    public function countImpressions(){
+
+        $qb = $this->createQueryBuilder('i');
+        $qb->select('COUNT(i)');
+
+        $query = $qb->getQuery();
+
+        return $query->getSingleScalarResult();
+
+    }
+
 }

@@ -14,7 +14,12 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use \DateTime;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
+
+/**
+ * @Security("has_role('ROLE_USER')")
+ */
 class EtudiantController extends Controller
 {
 
@@ -37,8 +42,9 @@ class EtudiantController extends Controller
 
             $repository = $this->getDoctrine()->getRepository('AppBundle:Etudiant');
 
-            $repo_etudiant = $repository->checkIfEtudiantAlreadyExists($etudiant->getNom(), $etudiant->getPrenom(), $etudiant->getGenre(),
-                $etudiant->getDateExamen(), $etudiant->getOptionEtud(), $etudiant->getSpecialite());
+            $repo_etudiant = $repository->checkIfEtudiantAlreadyExists($etudiant->getMention(), $etudiant->getNom(), 
+                $etudiant->getPrenom(), $etudiant->getDateExamen(),
+                $etudiant->getSpecialite(), $etudiant->getOptionEtud());
 
             //var_dump($repo_etudiant); die();
 
@@ -48,6 +54,8 @@ class EtudiantController extends Controller
                 return $this->render('AppBundle:Default:etudiant/new.html.twig', array('form' => $form->createView(), 'erreur' => 'Une demande existe déja pour cet étudiant!',
                     'demandes_etudiant' => $dem_repository->findEtudiantDemandes($repo_etudiant[0]->getId())));
             }
+
+            $etudiant->setGenre("M");
 
             //ORIGINAL
             $demande = new Demande();
@@ -82,6 +90,52 @@ class EtudiantController extends Controller
     }
 
     /**
+     * @Route("/demande/edit/{id}",name="demande_edit")
+     */
+    public function editAction(Request $request, $id)
+    {
+
+        $demande = $this->getDoctrine()->getRepository('AppBundle:Demande')->find($id);
+
+        if (!$demande) {
+            throw $this->createNotFoundException(
+                'Aucune demande trouvée avec l\id ' . $id
+            );
+        }
+
+        $form = $this->createForm(EtudiantType::class, $demande->getEtudiant(), array(
+            'action' => $this->generateUrl('demande_edit', array('id' => $id)),
+            'method' => 'POST',
+        ));
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $etudiant = $form->getData();
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($etudiant);
+
+
+            $em->flush();
+
+            $form = $this->createForm(EtudiantType::class, new Etudiant(), array(
+                'action' => $this->generateUrl('demande_edit', array('id' => $id)),
+                'method' => 'POST',
+            ));
+
+            return $this->render('AppBundle:Default:etudiant/edit.html.twig', array('form' => $form->createView(), 'success' => 'Modification réussie!',
+                'etudiant' => new Etudiant()));
+
+
+        }
+
+        return $this->render('AppBundle:Default:etudiant/edit.html.twig', array('form' => $form->createView(), 'etudiant' => $demande->getEtudiant()));
+
+    }
+
+    /**
      * @Route("/demande/list",name="demande_list")
      */
     public function listAction(Request $request)
@@ -93,8 +147,11 @@ class EtudiantController extends Controller
 
         $demandes = $repository->findAll();
 
+        //return $this->render('AppBundle:Default:etudiant/list.html.twig', array('demandes' => $demandes,
+          //  'libelle' => "Liste des demandes de l'année " . (new DateTime)->format("Y")));
+
         return $this->render('AppBundle:Default:etudiant/list.html.twig', array('demandes' => $demandes,
-            'libelle' => "Liste des demandes de l'année " . (new DateTime)->format("Y")));
+            'libelle' => "Liste des demandes"));
     }
 
 
@@ -129,6 +186,51 @@ class EtudiantController extends Controller
     }
 
     /**
+     * @Route("/demande/filter/{formId}",name="liste_demande_filter")
+     */
+    public function filterAction(Request $request, $formId)
+    {
+
+        $repository = $this->getDoctrine()->getRepository('AppBundle:Demande');
+
+        $matricule = $request->get('matricule');
+
+        if ($formId == "1") {
+            $demandes = $repository->findDemandesByMatriculeEtat($matricule, null);
+            if (!$demandes) {
+                throw $this->createNotFoundException(
+                    'Aucune demande trouvée avec le matricule: ' . $matricule
+                );
+            }
+
+            return $this->render('AppBundle:Default:etudiant/list.html.twig', array('demandes' => $demandes, 'libelle' => "Liste des demandes"));
+        }
+
+        if ($formId == "2") {
+            $demandes = $repository->findDemandesByMatriculeEtat($matricule, "En cours");
+            if (!$demandes) {
+                throw $this->createNotFoundException(
+                    'Aucune demande trouvée avec le matricule: ' . $matricule
+                );
+            }
+
+            return $this->render('AppBundle:Default:etudiant/list_a_imprimer.html.twig', array('demandes' => $demandes, 'libelle' => "Liste des demandes à imprimer"));
+        }
+
+        if ($formId == "3") {
+            $demandes = $repository->findDemandesByMatriculeEtat($matricule, "Traitée");
+            if (!$demandes) {
+                throw $this->createNotFoundException(
+                    'Aucune demande trouvée avec le matricule: ' . $matricule
+                );
+            }
+
+            return $this->render('AppBundle:Default:etudiant/list_imprimer.html.twig', array('demandes' => $demandes, 'libelle' => "Liste des demandes traitées"));
+        }
+
+    }
+
+    /**
      * @Route("/demande/imprimer/{id}",name="demande_tout_imprimer")
      */
     public function toutImprimerAction(Request $request, $id)
@@ -152,8 +254,27 @@ class EtudiantController extends Controller
 
         }
 
+        $directeurAcademique = $this->getDoctrine()->getRepository('AppBundle:Configuration')->find(2);
+        $directeurGenerale = $this->getDoctrine()->getRepository('AppBundle:Configuration')->find(3);
 
-        return $this->render('AppBundle:Default:impression/tout_imprimer.html.twig', array('demandes' => $demandes, 'libelle' => "Aperçu avant impression"));
+        return $this->render('AppBundle:Default:impression/tout_imprimer.html.twig', array('id' => $id, 'demandes' => $demandes, 'libelle' => "Aperçu avant impression",
+            'directeurAcademique' => $directeurAcademique, 'directeurGenerale' => $directeurGenerale,
+            'current_date' => (new DateTime)->format("d") . " " . $this->convertMonthToFrench((new DateTime)->format("F")) . " " . (new DateTime)->format("Y")));
+    }
+
+    /**
+     * @Route("/impression/list",name="list_impression")
+     */
+    public function listImpressionAction(Request $request)
+    {
+        $repository = $this->getDoctrine()
+            ->getRepository('AppBundle:Impression');
+
+        //$annee = (new DateTime)->format("Y");
+
+        $impressions = $repository->findAll();
+
+        return $this->render('AppBundle:Default:impression/list_impression.html.twig', array('impressions' => $impressions, 'libelle' => "Liste des impressions"));
     }
 
     /**
@@ -214,14 +335,15 @@ class EtudiantController extends Controller
                 $impression->setImprimePar($this->getUser()->getNom() . " " . $this->getUser()->getPrenom());
 
 
-                $em->persist($demande);
-                $em->persist($impression);
+                //$em->persist($demande);
+                //$em->persist($impression);
 
-                $em->flush();
+                //$em->flush();
             }
 
             return new JsonResponse(array('status' => 'done'));
         }
+
         return new Response("Ceci n'est pas une requete AJAX!", 400);
     }
 
@@ -270,6 +392,50 @@ class EtudiantController extends Controller
     {
 
 
+    }
+
+    public function convertMonthToFrench($month) {
+        $monthFr = "";
+        switch ($month) {
+            case "January":
+                $monthFr = "Janvier";
+                break;
+            case "February":
+                $monthFr = "Février";
+                break;
+            case "March":
+                $monthFr = "Mars";
+                break;
+            case "April":
+                $monthFr = "Avril";
+                break;
+            case "May":
+                $monthFr = "Mai";
+                break;
+            case "June":
+                $monthFr = "Juin";
+                break;
+            case "July":
+                $monthFr = "Juillet";
+                break;
+            case "August":
+                $monthFr = "Août";
+                break;
+            case "September":
+                $monthFr = "Septembre";
+                break;
+            case "October":
+                $monthFr = "Octobre";
+                break;
+            case "November":
+                $monthFr = "Novembre";
+                break;
+            default:
+                $monthFr = "Décembre";
+                break;
+        }
+
+        return $monthFr;
     }
 
 

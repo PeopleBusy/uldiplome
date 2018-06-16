@@ -69,7 +69,7 @@
                 {% else %}
 
                     <div class="col-md-12">
-                        <button type="button" class="btn btn-success" id="btn_print" onclick="generate()">
+                        <button type="button" class="btn btn-primary avoid-this" id="btn_print">
                             <i class="fa fa-print"></i>
                             Imprimer
                         </button>
@@ -77,30 +77,107 @@
 
                     <div id="html-2-pdfwrapper" class="col-md-12">
 
-                        {% if demandes|length > 1 %}
+                        {% if id == 0 %}
                             {% for i in demandes %}
-                                <p style='page-break-before: always; margin-top:50px;'>{{ i.id }}</p>
 
-                                <p class="text-red">{{ i.typeDemande }}</p>
-                                <p class="demande" data-id="{{ i.id }}">{{ i.etudiant.nom }} {{ i.etudiant.prenom }}</p>
-                                <p>{{ i.etudiant.dateExamen }}</p>
-                                <p>{{ i.etudiant.optionEtud }}</p>
-                                <p>{{ i.etudiant.specialite }}</p>
-                                <p>{{ i.etudiant.mention }}</p>
+                                <div class="impression" style="font-size: 25px;padding: 110px 70px 10px 85px;">
+                                    {% if i.typeDemande == 'Duplicata' %}
+                                        <p class="text-red pull-right" style="text-transform: uppercase;font-size: 35px !important; margin-right: 30px !important;margin-top: 8px !important;font-family: 'Alfa Slab One'">
+                                            {{ i.typeDemande }}</p>
+                                        <div style="margin-top: 72px;"></div>
+                                    {% else %}
+                                        <p class="text-white" style='margin-top:50px; margin-bottom: 50px;'>{{ i.typeDemande }}</p>
+                                        <div style="margin-top: 53px;"></div>
+                                    {% endif %}
+
+                                    <p class="pull-right">
+                                        <span style="margin-right: 170px!important;font-size: 20px !important;" class="text-bold">{{ i.etudiant.dateExamen }} </span>
+                                    </p>
+
+                                    <p style="padding-bottom: 60px !important;"></p>
+
+                                    <p class="demande" data-id="{{ i.id }}">
+                                        <span class="text-bold" style="margin-left:170px!important;font-size: 35px !important;font-family: 'Italianno';">
+                                            {{ i.etudiant.nom }}&nbsp;&nbsp;{{ i.etudiant.prenom }}</span>
+                                    </p>
+
+                                    <p style="padding-bottom: 43px !important;"></p>
+
+                                    <p class="">
+                                        <span class="text-bold" style="margin-left:150px!important;margin-top:50px!important;">{{ i.etudiant.optionEtud }}</span>
+                                    </p>
+
+                                    <p class="">
+                                        <span class="text-bold" style="margin-left:150px!important;margin-top:7px!important;">{{ i.etudiant.specialite }}</span>
+                                    </p>
+
+                                    <p class="">
+                                        <span class="text-bold" style="margin-left:150px!important;margin-top:11px!important;">{{ i.etudiant.mention }} </span>
+                                    </p>
+
+                                    <p class="pull-right" style="font-size: 13px !important; margin-right: 100px!important;margin-top:45px!important;">{{ current_date }}</p>
+                                    <p style="margin-top: 150px !important;">
+                                        <span style="margin-left: 40px;font-size: 15px !important;text-decoration: underline;margin-right: 350px !important;">
+                                        {{ directeurAcademique.valeur }}
+                                        </span>
+                                        <span class="" style="font-size: 15px !important;text-decoration: underline;margin-right: 0px !important;">
+                                            {{ directeurGenerale.valeur }} </span>
+                                    </p>
+                                </div>
+
+
+                                <div style="page-break-after:always"></div>
 
 
                             {% endfor %}
 
                             {% else %}
 
-                                <p style='margin-top:50px;'>{{ demandes.id }}</p>
+                                <div class="impression" style="font-size: 25px;padding: 110px 70px 10px 85px;">
+                                    {% if demandes.typeDemande == 'Duplicata' %}
+                                        <p class="text-red pull-right" style="text-transform: uppercase;font-size: 35px !important; margin-right: 30px !important;margin-top: 8px !important;font-family: 'Alfa Slab One'">
+                                            {{ demandes.typeDemande }}</p>
+                                        <div style="margin-top: 72px;"></div>
+                                    {% else %}
+                                        <p class="text-white" style='margin-top:50px; margin-bottom: 50px;'>{{ demandes.typeDemande }}</p>
+                                        <div style="margin-top: 53px;"></div>
+                                    {% endif %}
 
-                                <p class="text-red">{{ demandes.typeDemande }}</p>
-                                <p class="demande" data-id="{{ demandes.id }}">{{ demandes.etudiant.nom }} {{ demandes.etudiant.prenom }}</p>
-                                <p>{{ demandes.etudiant.dateExamen }}</p>
-                                <p>{{ demandes.etudiant.optionEtud }}</p>
-                                <p>{{ demandes.etudiant.specialite }}</p>
-                                <p>{{ demandes.etudiant.mention }}</p>
+                                    <p class="pull-right">
+                                        <span style="margin-right: 170px!important;font-size: 20px !important;" class="text-bold">{{ demandes.etudiant.dateExamen }} </span>
+                                    </p>
+
+                                    <p style="padding-bottom: 60px !important;"></p>
+
+                                    <p class="demande" data-id="{{ demandes.id }}">
+                                        <span class="text-bold" style="margin-left:170px!important;font-size: 35px !important;font-family: 'Italianno';">
+                                            {{ demandes.etudiant.nom }}&nbsp;&nbsp;{{ demandes.etudiant.prenom }}</span>
+                                    </p>
+
+                                    <p style="padding-bottom: 43px !important;"></p>
+
+                                    <p class="">
+                                        <span class="text-bold" style="margin-left:150px!important;margin-top:50px!important;">{{ demandes.etudiant.optionEtud }}</span>
+                                    </p>
+
+                                    <p class="">
+                                        <span class="text-bold" style="margin-left:150px!important;margin-top:7px!important;">{{ demandes.etudiant.specialite }}</span>
+                                    </p>
+
+                                    <p class="">
+                                        <span class="text-bold" style="margin-left:150px!important;margin-top:11px!important;">{{ demandes.etudiant.mention }} </span>
+                                    </p>
+
+                                    <p class="pull-right" style="font-size: 13px !important; margin-right: 100px!important;margin-top:45px!important;">{{ current_date }}</p>
+                                    <p style="margin-top: 150px !important;">
+                                        <span style="margin-left: 40px;font-size: 15px !important;text-decoration: underline;margin-right: 350px !important;">
+                                        {{ directeurAcademique.valeur }}
+                                        </span>
+                                        <span class="" style="font-size: 15px !important;text-decoration: underline;margin-right: 0px !important;">
+                                            {{ directeurGenerale.valeur }} </span>
+                                    </p>
+                                </div>
+
 
                         {% endif %}
 
@@ -117,116 +194,5 @@
             <!-- /.box-footer-->
         </div>
     </section>
-
-    <script>
-        var base64Img = null;
-        imgToBase64('octocat.jpg', function(base64) {
-            base64Img = base64;
-        });
-
-        margins = {
-            top: 30,
-            bottom: 40,
-            left: 30,
-            width: 1500
-        };
-
-        generate = function()
-        {
-            var pdf = new jsPDF('l', 'pt', 'a4');
-            pdf.setFontSize(18);
-            pdf.fromHTML(document.getElementById('html-2-pdfwrapper'),
-                margins.left, // x coord
-                margins.top,
-                {
-                    // y coord
-                    width: margins.width// max width of content on PDF
-                },function(dispose) {
-                    headerFooterFormatting(pdf, pdf.internal.getNumberOfPages());
-                },
-                margins);
-
-            var iframe = document.createElement('iframe');
-            iframe.setAttribute('style','position:absolute;right:0; top:0; bottom:0; height:100%; width:1500px; padding:20px;');
-            var container = document.getElementById('box-container');
-            container.appendChild(iframe);
-
-            iframe.src = pdf.output('datauristring');
-
-            var demandes_array = [];
-            $("p.demande").each(function () {
-                demandes_array.push($(this).data('id'));
-            });
-
-            $.ajax({
-                method: "post",
-                url: "{{ path('demande_imprimer_final') }}",
-                data: {demandes : demandes_array},
-                success: function (data) {
-                    console.log(data);
-                }
-            })
-
-        };
-        function headerFooterFormatting(doc, totalPages)
-        {
-            for(var i = totalPages; i >= 1; i--)
-            {
-                //doc.setPage(i);
-                //header
-                //header(doc);
-
-                //footer(doc, i, totalPages);
-                //doc.page++;
-            }
-        };
-
-        function header(doc)
-        {
-            doc.setFontSize(30);
-            doc.setTextColor(40);
-            doc.setFontStyle('normal');
-
-            if (base64Img) {
-                doc.addImage(base64Img, 'JPEG', margins.left, 10, 40,40);
-            }
-
-            doc.text("Report Header Template", margins.left + 50, 40 );
-            doc.setLineCap(2);
-            doc.line(3, 70, margins.width + 43,70); // horizontal line
-        };
-
-        // You could either use a function similar to this or pre convert an image with for example http://dopiaza.org/tools/datauri
-        // http://stackoverflow.com/questions/6150289/how-to-convert-image-into-base64-string-using-javascript
-        function imgToBase64(url, callback, imgVariable) {
-
-            if (!window.FileReader) {
-                callback(null);
-                return;
-            }
-            var xhr = new XMLHttpRequest();
-            xhr.responseType = 'blob';
-            xhr.onload = function() {
-                var reader = new FileReader();
-                reader.onloadend = function() {
-                    imgVariable = reader.result.replace('text/xml', 'image/jpeg');
-                    callback(imgVariable);
-                };
-                reader.readAsDataURL(xhr.response);
-            };
-            xhr.open('GET', url);
-            xhr.send();
-        };
-
-        function footer(doc, pageNumber, totalPages){
-
-            var str = "Page " + pageNumber + " of " + totalPages
-
-            doc.setFontSize(10);
-            doc.text(str, margins.left, doc.internal.pageSize.height - 20);
-
-        };
-
-    </script>
 
 {% endblock %}

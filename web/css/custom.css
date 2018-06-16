@@ -28,3 +28,11 @@
     margin-top: 55px;
     z-index: 100;
 }
+
+.text-white {
+    color: transparent !important;
+}
+
+.impression p {
+    margin: -5px !important;
+}

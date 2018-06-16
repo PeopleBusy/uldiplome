@@ -63,6 +63,27 @@ class DemandeRepository extends \Doctrine\ORM\EntityRepository
 
     }
 
+    public function findDemandesByMatriculeEtat($matricule, $etat){
+
+        $qb = $this->createQueryBuilder('d');
+        $qb->select('d')
+            ->join('d.etudiant', 'e')
+            ->where('e.mention = :matricule');
+
+        if($etat != null){
+            $qb->andWhere('d.etatDemande = :etat');
+            $qb->setParameter('etat', $etat);
+        }
+
+        $qb->setParameter('matricule', $matricule);
+
+
+        $query = $qb->getQuery();
+
+        return $query->getResult();
+
+    }
+
     public function findEtudiantDemandes($etudiant_id){
 
         $qb = $this->createQueryBuilder('d');

@@ -40,22 +40,21 @@ class EtudiantRepository extends \Doctrine\ORM\EntityRepository
     }
 
 
-    public function checkIfEtudiantAlreadyExists($nom, $prenom, $genre, $dateExamen, $option, $specialite){
+    public function checkIfEtudiantAlreadyExists($mention, $nom, $prenom, $datexamen, $specialite, $option){
 
         $qb = $this->createQueryBuilder('e');
         $qb->select('e')
-            ->where('e.nom = :nom')
+            ->where('e.mention = :mention')
+            ->andWhere('e.nom = :nom')
             ->andWhere('e.prenom = :prenom')
-            ->andWhere('e.genre = :genre')
-            ->andWhere('e.dateExamen = :dateExamen')
+            ->andWhere('e.dateExamen = :datexamen')
             ->andWhere('e.optionEtud = :option')
             ->andWhere('e.specialite = :specialite')
 
-
+            ->setParameter('mention', $mention)
             ->setParameter('nom', $nom)
             ->setParameter('prenom', $prenom)
-            ->setParameter('genre', $genre)
-            ->setParameter('dateExamen', $dateExamen)
+            ->setParameter('datexamen', $datexamen)
             ->setParameter('option', $option)
             ->setParameter('specialite', $specialite);
 

@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+cd ~/Documents/Projet\ Client/ulimprime/
+php bin/console cache:clear
+php bin/console server:run

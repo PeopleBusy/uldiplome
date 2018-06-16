@@ -49,6 +49,8 @@
     <!-- Google Font -->
     <link rel="stylesheet"
           href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+    <link href='https://fonts.googleapis.com/css?family=Italianno' rel='stylesheet'>
+    <link href='https://fonts.googleapis.com/css?family=Alfa Slab One' rel='stylesheet'>
 
     <style>
         @CHARSET "UTF-8";
@@ -62,14 +64,21 @@
             page-break-inside: avoid;
             clear:both;
         }
+        .marRightS {
+            margin-right: 100px;
+        }
+        .marRightC {
+            margin-right: 50px;
+        }
+
     </style>
 
 
     {% block stylesheets %}{% endblock %}
-    <link rel="icon" type="image/x-icon" href=""/>
+    <link rel="icon" type="image/x-icon" href="{{ asset('') }}"/>
 
 </head>
-<body class="hold-transition skin-green sidebar-mini">
+<body class="hold-transition skin-blue sidebar-mini">
 
 <div class="wrapper">
 
@@ -77,9 +86,12 @@
         <!-- Logo -->
         <a href="{{ path('ul_homepage') }}" class="logo">
             <!-- mini logo for sidebar mini 50x50 pixels -->
-            <span class="logo-mini"><b>U</b>L</span>
+            <span class="logo-mini"><b>UL</b></span>
             <!-- logo for regular state and mobile devices -->
-            <span class="logo-lg"><b>UL</b>Diplôme</span>
+            <span class="logo-lg">
+                <img class="pull-left hide" style="width: 20%;height: 10%;margin-top: 8px;" src="{{ asset('img/logo_esag.jpg') }}">
+                <b>UL </b>Diplôme
+            </span>
         </a>
         <!-- Header Navbar: style can be found in header.less -->
         <nav class="navbar navbar-static-top">
@@ -145,7 +157,7 @@
                         <span>Liste des demandes</span>
                     </a>
                 </li>
-                <li class="{% if app.request.get('_route') == 'demande_list_a_imprimer' %}active{% endif %}">
+                <li class="{% if app.request.get('_route') in ['demande_list_a_imprimer', 'demande_tout_imprimer'] %}active{% endif %}">
                     <a href="{{ path('demande_list_a_imprimer') }}">
                         <i class="fa fa-print"></i>
                         <span>Demandes à imprimer</span>
@@ -157,7 +169,32 @@
                         <span>Demandes imprimées</span>
                     </a>
                 </li>
-
+                {% if is_granted('ROLE_ADMIN') %}
+                    <li class="{% if app.request.get('_route') == 'diplome_add' %}active{% endif %}">
+                        <a href="{{ path('diplome_add') }}">
+                            <i class="fa fa-paper-plane"></i>
+                            <span>Diplômes</span>
+                        </a>
+                    </li>
+                    <li class="{% if app.request.get('_route') == 'list_impression' %}active{% endif %}">
+                        <a href="{{ path('list_impression') }}">
+                            <i class="fa fa-print"></i>
+                            <span>Impressions</span>
+                        </a>
+                    </li>
+                    <li class="{% if app.request.get('_route') == 'configuration' %}active{% endif %}">
+                        <a href="{{ path('configuration') }}">
+                            <i class="fa fa-cogs"></i>
+                            <span>Réglages</span>
+                        </a>
+                    </li>
+                    <li class="{% if app.request.get('_route') == 'user_add' %}active{% endif %}">
+                        <a href="{{ path('user_add') }}">
+                            <i class="fa fa-users"></i>
+                            <span>Utilisateurs</span>
+                        </a>
+                    </li>
+                {% endif %}
             </ul>
         </section>
         <!-- /.sidebar -->
@@ -234,7 +271,7 @@
 
 <script src="{{ asset('js/custom.js') }}"></script>
 
-<script src="{{ asset('js/jspdf/jspdf.min.js') }}"></script>
+<script src="{{ asset('js/jQuery.print.js') }}"></script>
 
 <script src="{{ asset('bower_components/moment/moment.js') }}"></script>
 
@@ -288,6 +325,57 @@
             }
         });
     });
+</script>
+<script type='text/javascript'>
+    //<![CDATA[
+    jQuery(function($) { 'use strict';
+        $("#btn_print").on('click', function() {
+            var btn_print = $(this);
+            btn_print.addClass('disabled');
+            //Print ele4 with custom options
+            $("#html-2-pdfwrapper").print({
+                //Use Global styles
+                globalStyles : true,
+                //Add link with attrbute media=print
+                mediaPrint : false,
+                //Custom stylesheet
+                stylesheet : "http://fonts.googleapis.com/css?family=Inconsolata",
+                //Print in a hidden iframe
+                iframe : false,
+                //Don't print this
+                noPrintSelector : ".avoid-this",
+                //Add this at top
+                //prepend : "Hello World!!!<br/>",
+                //Add this on bottom
+                //append : "<br/>Buh Bye!",
+                // Custom title
+                title: null,
+                // Custom document type
+                doctype: '<!doctype html>',
+                //Log to console when printing is done via a deffered callback
+                deferred: $.Deferred().done(function() { console.log('Printing done', arguments); })
+            });
+
+            var demandes_array = [];
+            $("p.demande").each(function () {
+                demandes_array.push($(this).data('id'));
+            });
+
+            $.ajax({
+                method: "post",
+                url: "{{ path('demande_imprimer_final') }}",
+                data: {demandes : demandes_array},
+                success: function (data) {
+                    if(data.status === "done"){
+                        btn_print.removeClass('disabled');
+                    }
+                    console.log(data);
+                }
+            })
+        });
+        // Fork https://github.com/sathvikp/jQuery.print for the full list of options
+    });
+    //]]>
 </script>
 
 

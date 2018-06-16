@@ -1,6 +1,6 @@
 {% extends "::base.html.twig" %}
 
-{% block title %} Modifier agent {% endblock %}
+{% block title %} Modifier demande {% endblock %}
 
 {% block body %}
 
@@ -10,10 +10,9 @@
             <small></small>
         </h1>
         <ol class="breadcrumb">
-            <li><a href="#"><i class="fa fa-user"></i> Agents</a></li>
+            <li><a href="#"><i class="fa fa-pencil"></i> Demande</a></li>
             <li class="active">Modifier</li>
         </ol>
-        <div id="notif_box" class="hide"></div>
 
         {% if erreur is defined %}
 
@@ -75,7 +74,7 @@
             <div class="box-header with-border">
                 <h3 class="box-title">
                     <i class="fa fa-pencil"></i>
-                    Modifier un agent
+                    Modifier une demande
                 </h3>
 
                 <div class="box-tools pull-right">
@@ -89,78 +88,33 @@
 
                 {{ form_start(form) }}
 
-                    <div class="form-group col-md-2">
-                        {{ form_row(form.nom) }}
-                    </div>
-                    <div class="form-group col-md-2">
-                        {{ form_row(form.prenom) }}
-                    </div>
-                    <div class="form-group col-md-2">
-                        {{ form_row(form.telephone) }}
-                    </div>
-                    <div class="form-group col-md-1">
-                        {{ form_row(form.typeContrat) }}
-                    </div>
+                <div class="form-group col-md-4">
+                    {{ form_row(form.nom) }}
+                </div>
+                <div class="form-group col-md-4">
+                    {{ form_row(form.prenom) }}
+                </div>
+                <div class="form-group col-md-4">
+                    {{ form_row(form.dateExamen) }}
+                </div>
 
-                    {% if contratagent.agent.typeContrat == 'CDD' %}
+                <div class="form-group col-md-4">
+                    {{ form_row(form.optionEtud) }}
+                </div>
 
-                        <div class="form-group col-md-2 div_datecontrat" id="div_datedebut">
-                            <label>Date début du contrat:</label>
-                            <div class="input-group date">
-                                <div class="input-group-addon">
-                                    <i class="fa fa-calendar"></i>
-                                </div>
-                                <input type="text" name="date_debut" value="{{ contratagent.dateDebut|date('d/m/Y') }}" class="form-control pull-right" id="datepicker1">
-                            </div>
-                        </div>
-                        <div class="form-group col-md-2 div_datecontrat" id="div_datefin">
-                            <label>Date fin du contrat:</label>
-                            <div class="input-group date">
-                                <div class="input-group-addon">
-                                    <i class="fa fa-calendar"></i>
-                                </div>
-                                <input type="text" name="date_fin" value="{{ contratagent.dateFin|date('d/m/Y') }}" class="form-control pull-right" id="datepicker2">
-                            </div>
-                        </div>
+                <div class="form-group col-md-4">
+                    {{ form_row(form.specialite) }}
+                </div>
 
-                    {% else %}
-
-                        <div class="form-group col-md-2 div_datecontrat" id="div_datedebut">
-                            <label>Date début du contrat:</label>
-                            <div class="input-group date">
-                                <div class="input-group-addon">
-                                    <i class="fa fa-calendar"></i>
-                                </div>
-                                <input type="text" name="date_debut" class="form-control pull-right" id="datepicker1">
-                            </div>
-                        </div>
-                        <div class="form-group col-md-2 div_datecontrat" id="div_datefin">
-                            <label>Date fin du contrat:</label>
-                            <div class="input-group date">
-                                <div class="input-group-addon">
-                                    <i class="fa fa-calendar"></i>
-                                </div>
-                                <input type="text" name="date_fin" class="form-control pull-right" id="datepicker2">
-                            </div>
-                        </div>
-
-                    {% endif %}
-
-                    <div class="form-group col-md-2 hide" id="div_date_embauche">
-                        <label>Date d'embauche:</label>
-                        <div class="input-group date">
-                            <div class="input-group-addon">
-                                <i class="fa fa-calendar"></i>
-                            </div>
-                            <input type="text" name="date_embauche" value="{{ contratagent.dateDebut|date('d/m/Y') }}" class="form-control pull-right" id="datepicker3">
-                        </div>
-                    </div>
-                    <div class="form-group col-md-1">
-                        <button type="submit" class="btn btn-danger marTop25px">Enregistrer</button>
-                    </div>
+                <div class="form-group col-md-4">
+                    {{ form_row(form.mention) }}
+                </div>
+                
+                <div class="form-group col-md-1">
+                    <button type="submit" class="btn btn-primary marTop25px">Modifier</button>
+                </div>
 
                 {{ form_end(form) }}
-
 
             </div>
             <!-- /.box-body -->

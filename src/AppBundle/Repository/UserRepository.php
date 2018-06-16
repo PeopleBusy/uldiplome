@@ -10,4 +10,31 @@ namespace AppBundle\Repository;
  */
 class UserRepository extends \Doctrine\ORM\EntityRepository
 {
+    public function checkIfUsernameAlreadyExists($username){
+
+        $qb = $this->createQueryBuilder('u');
+        $qb->select('u')
+            ->where('u.username = :username')
+            ->setParameter('username', $username);
+
+        $query = $qb->getQuery();
+
+        return $query->getSingleResult();
+
+    }
+
+    public function checkIfNomPrenomAlreadyExists($nom, $prenom){
+
+        $qb = $this->createQueryBuilder('u');
+        $qb->select('u')
+            ->where('u.nom = :nom')
+            ->where('u.prenom = :prenom')
+            ->setParameter('nom', $nom)
+            ->setParameter('prenom', $prenom);
+
+        $query = $qb->getQuery();
+
+        return $query->getSingleResult();
+
+    }
 }

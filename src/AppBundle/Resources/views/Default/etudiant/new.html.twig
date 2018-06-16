@@ -95,22 +95,23 @@
                     {{ form_row(form.prenom) }}
                 </div>
                 <div class="form-group col-md-4">
-                    {{ form_row(form.genre) }}
-                </div>
-                <div class="form-group col-md-4">
                     {{ form_row(form.dateExamen) }}
                 </div>
+
                 <div class="form-group col-md-4">
                     {{ form_row(form.optionEtud) }}
                 </div>
+
                 <div class="form-group col-md-4">
                     {{ form_row(form.specialite) }}
                 </div>
+
                 <div class="form-group col-md-4">
                     {{ form_row(form.mention) }}
                 </div>
+                
                 <div class="form-group col-md-1">
-                    <button type="submit" class="btn btn-success marTop25px">Enregistrer</button>
+                    <button type="submit" class="btn btn-primary marTop25px">Enregistrer</button>
                 </div>
 
                 {{ form_end(form) }}
@@ -133,10 +134,8 @@
                                 <thead>
                                 <tr>
                                     <th class="hide"><input type="checkbox"/></th>
-                                    <th>N° Enreg.</th>
                                     <th>Nom</th>
                                     <th>Prénom(s)</th>
-                                    <th>Genre</th>
                                     <th>Date Examen</th>
                                     <th>Option</th>
                                     <th>Spécialité</th>
@@ -150,10 +149,8 @@
                                 {% for i in demandes_etudiant %}
                                     <tr class="">
                                         <td class="hide"><input type="checkbox"/></td>
-                                        <td><span class="id badge bg-default">{{ i.id }}</span></td>
                                         <td><span class="nom">{{ i.etudiant.nom }}</span></td>
                                         <td><span class="prenom">{{ i.etudiant.prenom }}</span></td>
-                                        <td><span class="genre">{{ i.etudiant.genre }}</span></td>
                                         <td><span class="dateExamen">{{ i.etudiant.dateExamen }}</span></td>
                                         <td><span class="option">{{ i.etudiant.optionEtud }}</span></td>
                                         <td><span class="specialite">{{ i.etudiant.specialite }}</span></td>
